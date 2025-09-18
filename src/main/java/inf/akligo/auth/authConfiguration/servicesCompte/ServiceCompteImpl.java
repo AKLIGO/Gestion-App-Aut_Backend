@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.context.annotation.Lazy;
 import inf.akligo.auth.authConfiguration.repository.UtilisateurRepository;
 import inf.akligo.auth.authConfiguration.repository.RoleRepository;
 import inf.akligo.auth.securityConfig.serviceEmail.EmailService;
@@ -40,7 +40,7 @@ public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
     public ServiceCompteImpl(UtilisateurRepository utilisateurRepository, 
                              RoleRepository roleRepository,
                              TokenRepository tokenRepository,
-                             PasswordEncoder passwordEncoder,
+                             @Lazy PasswordEncoder passwordEncoder,
                              EmailService emailService) {
         this.utilisateurRepository = utilisateurRepository;
         this.roleRepository = roleRepository;
