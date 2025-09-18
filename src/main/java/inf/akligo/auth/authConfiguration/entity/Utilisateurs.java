@@ -29,6 +29,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.util.List;
 import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.security.Principal;
+import java.util.stream.Collectors;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+
 
 @Builder
 @Entity
@@ -38,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Setter
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-public class Utilisateurs{
+public class Utilisateurs implements UserDetails, Principal{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -70,7 +78,68 @@ public class Utilisateurs{
 
     public List<Roles> getRoles() {
     return roles;
-}
+    }
+
+    @Override
+    public String getName(){
+        return email;
+    }
+    
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return this.roles
+                    .stream()
+                    .map(r-> new SimpleGrantedAuthority(r.getName()))
+                    .collect(Collectors.toList());
+    }
+    
+    @Override
+    public String getPassword() {
+        return password; 
+    }
+
+    @Override
+    public String getUsername() {
+        return email; 
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; 
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !accountLocked; 
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; 
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled; 
+    }
+
+    public String getFullName(){
+        return nom + " " + prenoms;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+
+     public boolean isAccountLocked() {
+        return accountLocked;
+    }
+
+
+
+
+
+
 
 
 }
