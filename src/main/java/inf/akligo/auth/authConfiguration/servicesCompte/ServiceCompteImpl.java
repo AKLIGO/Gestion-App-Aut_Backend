@@ -138,8 +138,9 @@ public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
                     utilisateur.getEmail(),
                     utilisateur.getFullName(),
                     EmailTemplateName.ACTIVATE_ACCOUNT,
-                    activationUrl,
                     newToken,
+                    activationUrl,
+                    
                     "Account activation"
             );
         } catch (Exception e) {
