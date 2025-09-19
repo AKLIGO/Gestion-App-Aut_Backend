@@ -23,13 +23,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtService{
-    private long jwtExpiration = 12233;
-    private String secretKey= "qwerty";
+    private long jwtExpiration = 86400000;
+    private String secretKey= "votreCleSecreteTresTresLongueEtComplexePourLaSecurite";
 
     public String generateToken(UserDetails userdetails){
         return generateToken(new HashMap<>(), userdetails);
     }
-    private  String generateToken (HashMap<String,Object> claims, UserDetails userdetails ){
+    public  String generateToken (HashMap<String,Object> claims, UserDetails userdetails ){
 
         return buildToken(claims, userdetails, jwtExpiration);
     }

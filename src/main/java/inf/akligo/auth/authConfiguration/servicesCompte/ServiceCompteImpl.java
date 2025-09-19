@@ -8,7 +8,7 @@ import inf.akligo.auth.authConfiguration.entity.Token;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.security.authentication.AuthenticationManager;
 import java.util.List;
 import java.util.Collections;
 import java.time.LocalDateTime;
@@ -24,6 +24,12 @@ import inf.akligo.auth.authConfiguration.repository.RoleRepository;
 import inf.akligo.auth.securityConfig.serviceEmail.EmailService;
 import inf.akligo.auth.securityConfig.serviceEmail.EmailTemplateName;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import inf.akligo.auth.securityConfig.security.JwtService;
+import java.util.HashMap;
+import inf.akligo.auth.authConfiguration.request.AuthenticationRequest;
+import inf.akligo.auth.authConfiguration.request.AuthenticationResponse;
+
 @Service
 @Transactional
 public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
@@ -36,17 +42,23 @@ public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public ServiceCompteImpl(UtilisateurRepository utilisateurRepository, 
                              RoleRepository roleRepository,
                              TokenRepository tokenRepository,
                              @Lazy PasswordEncoder passwordEncoder,
+                             JwtService jwtService,
+                             @Lazy AuthenticationManager authenticationManager,
                              EmailService emailService) {
         this.utilisateurRepository = utilisateurRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenRepository = tokenRepository;
         this.emailService = emailService;
+        this.authenticationManager=authenticationManager;
+        this.jwtService=jwtService;
     }
 
     @Override
@@ -173,5 +185,47 @@ public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
         }
 
         return codeBuilder.toString();
+    }
+
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request){
+        var auth= authenticationManager.authenticate(
+
+                new UsernamePasswordAuthenticationToken(
+
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        var claims = new HashMap<String, Object>();
+        var user = ((Utilisateurs)auth.getPrincipal());
+
+        claims.put("fullName", user.getFullName());
+        var jwtToken = jwtService.generateToken(claims,user);
+         //recuperons l'entiter depuis la base de donnees
+
+
+        return AuthenticationResponse.builder()
+                        .token(jwtToken).build();
+    }
+
+
+     public void activationAccount(String token){
+        Token savedToken = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Invali Token"));
+
+        if(LocalDateTime.now().isAfter(savedToken.getExpiration())){
+            sendValidationEmail(savedToken.getUser());
+            throw new RuntimeException("Activation token has Expired. A new token has been send ");
+        }
+
+        var user=utilisateurRepository.findById(savedToken.getUser().getId())
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouver"));
+        user.setEnabled(true);
+        utilisateurRepository.save(user);
+        savedToken.setValidateAt(LocalDateTime.now());
+        tokenRepository.save(savedToken);        
+                
     }
 }

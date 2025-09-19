@@ -27,8 +27,6 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @ToString
 @Data
 
@@ -46,6 +44,16 @@ public class Token{
     @ManyToOne
     @JoinColumn(name="utilisateurId", nullable=false)
     private Utilisateurs utilisateur;
+
+     // Méthode pour obtenir la date d'expiration
+    public LocalDateTime getExpiration() {
+        return expiresAt; // Renvoie expiresAt
+    }
+
+    // Méthode pour obtenir l'utilisateur
+    public Utilisateurs getUser() {
+        return utilisateur; // Renvoie l'utilisateur associé
+    }
 
 
 

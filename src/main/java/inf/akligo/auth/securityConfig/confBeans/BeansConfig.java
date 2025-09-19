@@ -9,7 +9,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.AuthenticationManager;
 
 
 @Configuration
@@ -30,6 +31,14 @@ public class BeansConfig{
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
+        try {
+            return config.getAuthenticationManager();
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la configuration de l'AuthenticationManager", e);
+        }
+    }
 
 
 }
