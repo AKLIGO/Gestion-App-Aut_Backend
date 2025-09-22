@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import inf.akligo.auth.gestionDesBiens.entity.Immeuble;
+
 import jakarta.persistence.Column;
 
 import jakarta.persistence.FetchType;
@@ -18,6 +20,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+import jakarta.persistence.OneToMany;
 
 import inf.akligo.auth.authConfiguration.entity.Roles;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,6 +35,7 @@ import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.security.Principal;
 import java.util.stream.Collectors;
@@ -44,7 +49,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+
+@ToString(exclude = "immeubles")
+@JsonIgnoreProperties({"immeubles"})
 @EntityListeners(AuditingEntityListener.class)
 public class Utilisateurs implements UserDetails, Principal{
     @Id
@@ -61,6 +68,9 @@ public class Utilisateurs implements UserDetails, Principal{
     private String email;
     private String telephone;
     private String adresse;
+
+    @OneToMany(mappedBy = "utilisateur")
+    private List<Immeuble> immeubles;
 
     @ManyToMany(fetch= FetchType.EAGER)
     private List<Roles> roles;
