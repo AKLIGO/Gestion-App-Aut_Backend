@@ -25,6 +25,7 @@ public class JwtFilter extends OncePerRequestFilter{
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final BlackListTokenSevice blackListTokenSevice;
 
     @Override
     protected void doFilterInternal(
