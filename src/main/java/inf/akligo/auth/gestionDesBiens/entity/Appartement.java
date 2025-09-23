@@ -17,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeAppartement;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutAppartement;
@@ -29,8 +30,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Builder
 @Entity
@@ -39,7 +46,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-
+@EntityListeners(AuditingEntityListener.class)
 public class Appartement{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,6 +78,11 @@ public class Appartement{
     @JoinColumn(name="immeuble_id")
     @ToString.Exclude
     private Immeuble immeuble;
+
+    @OneToMany(mappedBy = "appartement", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("appartement-images")
+    @ToString.Exclude
+    private List<Images> images = new ArrayList<>();
 
 
 }

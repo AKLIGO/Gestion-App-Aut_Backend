@@ -27,4 +27,33 @@ public class AppartementController {
         return ResponseEntity.ok(updatedApp);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> supprimerApp(@PathVariable Long id) {
+        serviceApp.removeAppartement(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Appartement>> getAllAppartements() {
+        return ResponseEntity.ok(serviceApp.listAppartement());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Appartement> getAppartementById(@PathVariable Long id) {
+        return ResponseEntity.ok(serviceApp.getAppartementById(id));
+    }
+
+    @PatchMapping("/{id}/statut")
+    public ResponseEntity<Appartement> changerStatut(@PathVariable Long id, @RequestParam String statut) {
+        Appartement updated = serviceApp.changerStatutApp(statut, id);
+        return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/{id}/disponible")
+    public ResponseEntity<Boolean> isDisponible(@PathVariable Long id) {
+        boolean disponible = serviceApp.isDiponible(id);
+        return ResponseEntity.ok(disponible);
+    }
+
+
 }

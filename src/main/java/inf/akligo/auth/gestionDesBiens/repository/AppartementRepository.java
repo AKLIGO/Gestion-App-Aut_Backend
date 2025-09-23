@@ -10,5 +10,7 @@ import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutAppartement;
 public interface AppartementRepository extends JpaRepository<Appartement, Long>{
 
     Optional<Appartement> findByIdAndStatut(Long id, StatutAppartement statut);
+    Optional<Appartement> findByNom(String nom);
+
 
 }
