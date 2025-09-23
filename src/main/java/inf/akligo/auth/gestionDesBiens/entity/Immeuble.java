@@ -26,6 +26,7 @@ import jakarta.persistence.EntityListeners;
 import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
 import java.util.List;
 import lombok.ToString;
@@ -61,7 +62,8 @@ public class Immeuble{
     private TypeImmeuble type;
 
     @Builder.Default
-    @OneToMany(mappedBy="immeuble",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="immeuble",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Appartement> appartements=new ArrayList<>();
 
     @ManyToOne

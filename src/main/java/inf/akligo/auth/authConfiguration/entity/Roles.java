@@ -31,7 +31,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "users")
 public class Roles{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

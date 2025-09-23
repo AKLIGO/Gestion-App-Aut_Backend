@@ -62,6 +62,7 @@ public class Images{
     @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "appartement_id", nullable = true) 
     @ToString.Exclude 
+    
     @JsonBackReference("appartement-images") 
     private Appartement appartement;
 }

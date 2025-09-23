@@ -2,6 +2,12 @@ package inf.akligo.auth.gestionDesBiens.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 
+
+import inf.akligo.auth.gestionDesBiens.entity.Appartement;
+import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutDeReservation;
+import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeDeRervation;
+import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,26 +25,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeAppartement;
-import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutAppartement;
-import inf.akligo.auth.gestionDesBiens.entity.Immeuble;
-import lombok.ToString;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.time.LocalDate;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 
 @Builder
@@ -49,23 +46,18 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Setter
 @ToString
 @EntityListeners(AuditingEntityListener.class)
-public class Appartement{
+public class Reservation{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nom;
-    private String adresse;
-    private int numero;
-    private String superficie;
-    private int nbrDePieces;
-    private String description;
 
+    @Column(name = "date_debut", nullable = false)
+    private LocalDate dateDebut;
 
-    @Enumerated(EnumType.STRING)
-    private TypeAppartement type;
+    @Column(name = "date_fin", nullable = false)
+    private LocalDate dateFin;
 
-    @Enumerated(EnumType.STRING)
-    private StatutAppartement statut;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false,updatable=false)
@@ -77,17 +69,22 @@ public class Appartement{
 
 
     @ManyToOne
-    @JoinColumn(name="immeuble_id")
-    @JsonBackReference
-    @ToString.Exclude
-    private Immeuble immeuble;
+    @JoinColumn(name = "appartement_id")
+    private Appartement appartement;
 
-    @OneToMany(mappedBy = "appartement", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("appartement-images")
-    @ToString.Exclude
-    //@JsonManagedReference
-    @JsonIgnore
-    private List<Images> images = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "utilisateur_id")
+    private Utilisateurs utilisateur;
+
+    @Enumerated(EnumType.STRING)
+    private StatutDeReservation statut;
+
+    @Enumerated(EnumType.STRING)
+    private TypeDeRervation type;
+
+
+
+
 
 
 }

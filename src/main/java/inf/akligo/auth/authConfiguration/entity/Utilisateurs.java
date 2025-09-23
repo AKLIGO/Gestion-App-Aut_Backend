@@ -50,7 +50,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Getter
 @Setter
 
-@ToString(exclude = "immeubles")
+@ToString(exclude = {"immeubles", "roles"})
 @JsonIgnoreProperties({"immeubles"})
 @EntityListeners(AuditingEntityListener.class)
 public class Utilisateurs implements UserDetails, Principal{
