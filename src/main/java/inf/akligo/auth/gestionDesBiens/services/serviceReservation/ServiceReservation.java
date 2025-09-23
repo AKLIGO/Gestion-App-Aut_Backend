@@ -17,6 +17,7 @@ import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeDeRervation;
 import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
 import java.io.IOException;
 import inf.akligo.auth.gestionDesBiens.requests.ReservationRequest;
+import inf.akligo.auth.gestionDesBiens.requests.ReservationResponseDTO;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +70,45 @@ public class ServiceReservation{
                 .build();
 
         return reservationRepository.save(reservation);
+    
+    
     }
+
+    @Transactional
+public ReservationResponseDTO updateReservationStatus(Long reservationId, String nouveauStatutStr) {
+    // Récupérer la réservation
+    Reservation reservation = reservationRepository.findById(reservationId)
+            .orElseThrow(() -> new RuntimeException("Réservation non trouvée"));
+
+    // Récupérer l'utilisateur lié à la réservation
+    Utilisateurs utilisateur = reservation.getUtilisateur();
+
+    // Convertir le String en enum
+    StatutDeReservation nouveauStatut;
+    try {
+        nouveauStatut = StatutDeReservation.valueOf(nouveauStatutStr.toUpperCase());
+    } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Statut invalide");
+    }
+
+    // Mettre à jour le statut
+    reservation.setStatut(nouveauStatut);
+    reservationRepository.save(reservation);
+
+    // Retourner le DTO
+    return ReservationResponseDTO.builder()
+            .id(reservation.getId())
+            .dateDebut(reservation.getDateDebut())
+            .dateFin(reservation.getDateFin())
+            .appartementNom(reservation.getAppartement().getNom())
+            .appartementAdresse(reservation.getAppartement().getAdresse())
+            .utilisateurNom(utilisateur.getNom())
+            .utilisateurPrenoms(utilisateur.getPrenoms())
+            .statut(reservation.getStatut().name())
+            .build();
+}
+
+
 
 
 
