@@ -44,7 +44,8 @@ public class Appartement{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String nom;
+    private String adresse;
     private int numero;
     private String superficie;
     private int nbrDePieces;
