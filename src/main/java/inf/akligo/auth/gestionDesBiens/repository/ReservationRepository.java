@@ -3,6 +3,7 @@ package inf.akligo.auth.gestionDesBiens.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import inf.akligo.auth.gestionDesBiens.entity.Reservation;
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
+import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutDeReservation;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeDeRervation;
 import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
@@ -23,6 +24,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>{
     // Rechercher par appartement
     List<Reservation> findByAppartement(Appartement appartement);
 
+    //Rechercher par vehicule
+
+    List<Reservation> findByVehicule(Vehicules vehicule);
+
     // Rechercher par utilisateur
     List<Reservation> findByUtilisateur(Utilisateurs utilisateur);
 
@@ -35,6 +40,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>{
 
     // Rechercher par statut et type
     List<Reservation> findByStatutAndType(StatutDeReservation statut, TypeDeRervation type);
+    Optional<List<Reservation>> findByVehiculeAndStatut(Vehicules vehicule, StatutDeReservation statut);
+
 
     // Rechercher par utilisateur et statut
     List<Reservation> findByUtilisateurAndStatut(Utilisateurs utilisateur, StatutDeReservation statut);

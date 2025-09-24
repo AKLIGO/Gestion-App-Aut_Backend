@@ -4,6 +4,7 @@ import jakarta.persistence.EntityListeners;
 
 
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
+import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutDeReservation;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeDeRervation;
 import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
@@ -71,6 +72,11 @@ public class Reservation{
     @ManyToOne
     @JoinColumn(name = "appartement_id")
     private Appartement appartement;
+
+    @ManyToOne
+    @JoinColumn(name="vehicule_id")
+    private Vehicules vehicule;
+
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id")
