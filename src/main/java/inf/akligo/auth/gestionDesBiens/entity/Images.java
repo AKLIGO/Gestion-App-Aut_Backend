@@ -26,7 +26,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
-
+import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany; 
@@ -65,4 +65,9 @@ public class Images{
     
     @JsonBackReference("appartement-images") 
     private Appartement appartement;
+
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "vehicule_id", nullable = true) 
+    @ToString.Exclude 
+    private Vehicules vehicule;
 }
