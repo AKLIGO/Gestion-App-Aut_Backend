@@ -4,7 +4,9 @@ import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
 import inf.akligo.auth.authConfiguration.entity.Roles;
 import inf.akligo.auth.authConfiguration.repository.TokenRepository;
 import inf.akligo.auth.authConfiguration.entity.Token;
-
+import org.springframework.security.core.Authentication;
+import java.util.Optional;
+import inf.akligo.auth.authConfiguration.datas.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -228,4 +230,30 @@ public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
         tokenRepository.save(savedToken);        
                 
     }
+
+
+     /**
+     * Récupère l'utilisateur courant à partir de l'authentication Spring Security
+     */
+
+
+    /**
+     * Récupère l'utilisateur courant et le mappe vers un DTO
+     */
+    public Optional<UserDto> getCurrentUser(Authentication authentication) {
+        if (authentication == null || authentication.getName() == null) {
+            return Optional.empty();
+        }
+
+        return utilisateurRepository.findByEmail(authentication.getName())
+                .map(user -> new UserDto(
+                        user.getId(),
+                        user.getNom(),
+                        user.getPrenoms(),
+                        user.getEmail(),
+                        user.getRoles()
+                ));
+    
+}
+
 }

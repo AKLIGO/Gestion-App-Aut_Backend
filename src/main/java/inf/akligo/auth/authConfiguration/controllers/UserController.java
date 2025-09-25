@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import inf.akligo.auth.securityConfig.security.BlackListTokenSevice;
 import org.springframework.web.bind.annotation.PutMapping;
 import jakarta.servlet.http.HttpServletRequest;
-
+import inf.akligo.auth.authConfiguration.datas.UserDto;
 //import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
@@ -36,12 +36,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.validation.Valid;
 import java.util.List;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.web.bind.annotation.RequestParam;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("auth")
 @RestController
 
@@ -157,6 +157,16 @@ public ResponseEntity<?> logout(HttpServletRequest request) {
         }
         return null;
     }
+
+
+      @GetMapping("/users/me")
+      public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
+        return serviceCompteImpl.getCurrentUser(authentication)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    }
+
+
 
 
 }
