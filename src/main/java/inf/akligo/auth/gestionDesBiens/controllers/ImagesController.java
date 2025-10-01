@@ -52,4 +52,15 @@ public class ImagesController{
             return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getImageById(@PathVariable Long id) {
+        try {
+            Images image = serviceImage.getImageById(id);
+            return ResponseEntity.ok(image);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

@@ -57,4 +57,9 @@ public class ServiceImage{
 
     }
 
+        public Images getImageById(Long id) {
+            return imagesRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Image introuvable avec l'id " + id));
+    }
+
 }
