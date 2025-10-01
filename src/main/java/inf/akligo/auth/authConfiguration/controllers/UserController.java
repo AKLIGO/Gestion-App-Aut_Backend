@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import inf.akligo.auth.authConfiguration.datas.UserDto;
 //import javax.servlet.http.HttpServletRequest;
-
+import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -97,6 +97,7 @@ public class UserController{
     public ResponseEntity<AuthenticationResponse> authenticate(
         @RequestBody @Valid AuthenticationRequest request
     ){
+        
 
         return ResponseEntity.ok(serviceCompteImpl.authenticate(request));
     }
@@ -159,12 +160,19 @@ public ResponseEntity<?> logout(HttpServletRequest request) {
     }
 
 
-      @GetMapping("/users/me")
-      public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
-        return serviceCompteImpl.getCurrentUser(authentication)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+@GetMapping("/users/me")
+public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
+    System.out.println("Appel de /users/me");
+    
+    Optional<UserDto> currentUser = serviceCompteImpl.getCurrentUser(authentication);
+    if (currentUser.isPresent()) {
+        System.out.println("Utilisateur trouvé: " + currentUser.get().getEmail());
+        return ResponseEntity.ok(currentUser.get());
+    } else {
+        System.out.println("Utilisateur non authentifié");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+}
 
 
 

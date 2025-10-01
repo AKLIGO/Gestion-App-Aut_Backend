@@ -1,5 +1,5 @@
 package inf.akligo.auth.authConfiguration.request;
-
+import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -12,4 +12,5 @@ import lombok.Setter;
 @Setter
 public class AuthenticationResponse{
     private String token;
+    private Utilisateurs user; 
 }

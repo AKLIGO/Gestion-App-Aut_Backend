@@ -15,6 +15,11 @@ import inf.akligo.auth.securityConfig.security.JwtFilter;
 import inf.akligo.auth.securityConfig.confBeans.BeansConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 
 
@@ -28,23 +33,33 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(withDefaults())
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/auth/**",     
-                    "/public/**"
-                ).permitAll()
-                        .anyRequest()
-                            .authenticated() 
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:4200"));
+        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
+        config.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
+
+    @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(withDefaults())
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/auth/**").permitAll() // Autoriser toutes les requêtes sous /auth
+            .requestMatchers("/public/**").permitAll() // Autoriser aussi toutes les requêtes sous /public
+            .requestMatchers("/auth/users/me").hasRole("USER") // Protection pour cette route spécifique
+            .requestMatchers("/api/appartement").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/immeubles").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .anyRequest().authenticated() // Toute autre requête nécessite une authentification
+        )
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(authenticationProvider)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+}
 }

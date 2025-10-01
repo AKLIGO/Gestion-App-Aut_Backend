@@ -1,5 +1,7 @@
 package inf.akligo.auth.gestionDesBiens.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
 import inf.akligo.auth.gestionDesBiens.services.serviceApp.ServiceApp;
 import lombok.RequiredArgsConstructor;
@@ -8,15 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200") 
 @RestController
 @RequestMapping("/api/appartement")
+
 @RequiredArgsConstructor
 public class AppartementController {
 
     private final ServiceApp serviceApp;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Appartement> addAppartement(@Valid @RequestBody Appartement appartement) {
+        System.out.println("Tentative d'ajout d'un appartement par l'utilisateur : " + SecurityContextHolder.getContext().getAuthentication().getName());
         Appartement appartementSave = serviceApp.addAppartement(appartement);
         return ResponseEntity.ok(appartementSave);
     }

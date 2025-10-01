@@ -209,7 +209,9 @@ public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
 
 
         return AuthenticationResponse.builder()
-                        .token(jwtToken).build();
+                        .token(jwtToken)
+                        .user(user)
+                        .build();
     }
 
 

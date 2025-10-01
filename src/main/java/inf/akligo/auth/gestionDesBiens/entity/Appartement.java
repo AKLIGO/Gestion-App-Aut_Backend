@@ -59,7 +59,7 @@ public class Appartement{
     private String superficie;
     private int nbrDePieces;
     private String description;
-
+    private double prix;
 
     @Enumerated(EnumType.STRING)
     private TypeAppartement type;

@@ -1,16 +1,19 @@
 package inf.akligo.auth.gestionDesBiens.controllers;
 import inf.akligo.auth.gestionDesBiens.entity.Immeuble;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import inf.akligo.auth.gestionDesBiens.services.serviceCompteImpl.ServiceImmeuble;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
-
+import inf.akligo.auth.gestionDesBiens.requests.ImmeubleDTO;
 import java.util.List;
 
+
+@CrossOrigin(origins = "http://localhost:4200") 
 @RestController
 @RequestMapping("/api/immeubles")
+
 @RequiredArgsConstructor
 
 public class ImmeubleControllers{
@@ -36,8 +39,22 @@ public class ImmeubleControllers{
      }
 
      @GetMapping
-     public ResponseEntity<List<Immeuble>> listImmeuble(){
-        return ResponseEntity.ok(serviceImmeuble.listImmeuble());
+     public ResponseEntity<List<ImmeubleDTO>> listImmeuble(){
+         List<ImmeubleDTO> dtos=serviceImmeuble.listImmeuble()
+               .stream()
+               .map(i-> new ImmeubleDTO(
+                  i.getId(),
+                  i.getNom(),
+                  i.getVille(),
+                  i.getType(),
+                  i.getDescription(),
+                  i.getNbrAppartment(),
+                  i.getNbrEtage(),
+                  i.getCreatedAt(),
+                  i.getLastModifiedDate()
+               ))
+               .toList();
+        return ResponseEntity.ok(dtos);
      }
 
 }
