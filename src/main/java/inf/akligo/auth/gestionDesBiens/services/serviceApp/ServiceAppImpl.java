@@ -138,7 +138,7 @@ public AppartementDTO convertToDTO(Appartement appartement) {
                         .nomFichier(image.getNomFichier())
                         .typeMime(image.getTypeMime())
                         .appartementId(appartement.getId())
-                        .previewUrl("http://localhost:8080/api/images/" + image.getId())
+                        .previewUrl("http://localhost:8080/api/image/file/" + image.getNomFichier())
                         .build())
                 .collect(Collectors.toList());
     }

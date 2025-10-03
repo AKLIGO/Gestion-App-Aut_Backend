@@ -54,7 +54,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/auth/users/me").hasRole("USER") // Protection pour cette route spécifique
             .requestMatchers("/api/appartement/").hasAnyRole("PROPRIETAIRE", "ADMIN")
             .requestMatchers("/api/immeubles").hasAnyRole("PROPRIETAIRE", "ADMIN")
-            .requestMatchers("/api/image/**").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/image/").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/image/file/**").permitAll()
             .requestMatchers("/api/appartement/list").permitAll()
             .anyRequest().authenticated() // Toute autre requête nécessite une authentification
         )
