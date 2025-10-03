@@ -1,5 +1,5 @@
 package inf.akligo.auth.gestionDesBiens.controllers;
-
+import inf.akligo.auth.gestionDesBiens.requests.AppartementDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
@@ -10,13 +10,17 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.http.HttpStatus;
 @CrossOrigin(origins = "http://localhost:4200") 
 @RestController
 @RequestMapping("/api/appartement")
 
 @RequiredArgsConstructor
 public class AppartementController {
-
+    private static final Logger log = LoggerFactory.getLogger(AppartementController.class);
     private final ServiceApp serviceApp;
 
     @PostMapping
@@ -60,6 +64,14 @@ public class AppartementController {
         boolean disponible = serviceApp.isDiponible(id);
         return ResponseEntity.ok(disponible);
     }
+  @GetMapping("/list")
+ public ResponseEntity<List<AppartementDTO>> getAllAppartementsDTO() {
+    List<AppartementDTO> appartements = serviceApp.getAllAppartementsDTO();
+    if (appartements.isEmpty()) {
+        System.out.println("Aucun appartement trouvé.");
+    }
+    return ResponseEntity.ok(appartements);
+}
 
 
 }

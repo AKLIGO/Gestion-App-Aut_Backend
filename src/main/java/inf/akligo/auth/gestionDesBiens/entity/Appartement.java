@@ -82,7 +82,7 @@ public class Appartement{
     @ToString.Exclude
     private Immeuble immeuble;
 
-    @OneToMany(mappedBy = "appartement", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "appartement", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     @JsonManagedReference("appartement-images")
     @ToString.Exclude
     //@JsonManagedReference

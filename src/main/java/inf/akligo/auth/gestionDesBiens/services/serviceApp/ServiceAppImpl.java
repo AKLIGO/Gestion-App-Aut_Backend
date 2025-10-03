@@ -1,20 +1,26 @@
 package inf.akligo.auth.gestionDesBiens.services.serviceApp;
 
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
+import inf.akligo.auth.gestionDesBiens.requests.ImageDtoApp;
+import inf.akligo.auth.gestionDesBiens.requests.ImageDTO;
 import inf.akligo.auth.gestionDesBiens.repository.AppartementRepository;
 import org.springframework.stereotype.Service;
 import inf.akligo.auth.gestionDesBiens.services.serviceApp.ServiceApp;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutAppartement;
-
-
+import inf.akligo.auth.gestionDesBiens.requests.AppartementDTO;
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.Objects;
 
 @Service
 
 public class ServiceAppImpl implements ServiceApp{
     private final AppartementRepository appartementRepository;
-
+     private static final Logger log = LoggerFactory.getLogger(ServiceAppImpl.class);
     public ServiceAppImpl(AppartementRepository appartementRepository) {
         this.appartementRepository = appartementRepository;
     }
@@ -97,4 +103,60 @@ public class ServiceAppImpl implements ServiceApp{
                         .orElseThrow(() -> new RuntimeException("appartement non trouver"));
     }
 
+
+@Override
+public List<AppartementDTO> getAllAppartementsDTO() {
+    List<Appartement> appartements = appartementRepository.findAll();
+    System.out.println("Nombre d'appartements récupérés : " + appartements.size());
+    if (appartements == null) {
+        appartements = new ArrayList<>();
+    }
+
+    return appartements.stream()
+            .map(appartement -> {
+                try {
+                    return convertToDTO(appartement);
+                } catch (Exception e) {
+                    e.printStackTrace(); // log l’erreur pour chaque appartement
+                    return null; // ignore l'appartement qui pose problème
+                }
+            })
+            .filter(Objects::nonNull) // retire les DTO nuls
+            .collect(Collectors.toList());
+}
+
+
+
+public AppartementDTO convertToDTO(Appartement appartement) {
+    List<ImageDTO> imageDto = new ArrayList<>();
+
+    if (appartement.getImages() != null && !appartement.getImages().isEmpty()) {
+        imageDto = appartement.getImages().stream()
+                .map(image -> ImageDTO.builder()
+                        .id(image.getId())
+                        .libelle(image.getLibelle())
+                        .nomFichier(image.getNomFichier())
+                        .typeMime(image.getTypeMime())
+                        .appartementId(appartement.getId())
+                        .previewUrl("http://localhost:8080/api/images/" + image.getId())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    return AppartementDTO.builder()
+            .id(appartement.getId())
+            .nom(appartement.getNom())
+            .adresse(appartement.getAdresse())
+            .numero(appartement.getNumero())
+            .superficie(appartement.getSuperficie())
+            .nbrDePieces(appartement.getNbrDePieces())
+            .description(appartement.getDescription())
+            .prix(appartement.getPrix())
+            .type(appartement.getType())
+            .statut(appartement.getStatut())
+            .createdAt(appartement.getCreatedAt())
+            .lastModifiedDate(appartement.getLastModifiedDate())
+            .images(imageDto)
+            .build();
+}
 }

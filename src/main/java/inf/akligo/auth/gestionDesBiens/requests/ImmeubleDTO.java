@@ -1,6 +1,9 @@
 package inf.akligo.auth.gestionDesBiens.requests;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeImmeuble;
 import java.time.LocalDateTime;
+import inf.akligo.auth.gestionDesBiens.requests.ImageDtoApp;
+import java.time.LocalDateTime; // Pour LocalDateTime
+import java.util.List;
 public class ImmeubleDTO{
     private Long id;
     private String nom;

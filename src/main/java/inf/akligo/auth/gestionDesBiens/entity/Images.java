@@ -47,27 +47,26 @@ public class Images{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "libelle", nullable = false) 
-    private String libelle; 
+    @Column(name = "libelle", nullable = false)
+    private String libelle;
 
-    @Lob 
-    @Column(name = "photo", columnDefinition = "LONGBLOB") 
-    private byte[] photo; 
+    @Column(name = "nom_fichier", nullable = false)
+    private String nomFichier; // ex: "173123_photo.png"
 
-    @Column(name = "nom_fichier") 
-    private String nomFichier; 
+    @Column(name = "type_mime")
+    private String typeMime;
 
-    @Column(name = "type_mime") 
-    private String typeMime; 
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "appartement_id", nullable = true) 
-    @ToString.Exclude 
-    
-    @JsonBackReference("appartement-images") 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appartement_id", nullable = true)
+    @ToString.Exclude
+    @JsonBackReference("appartement-images")
     private Appartement appartement;
 
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "vehicule_id", nullable = true) 
-    @ToString.Exclude 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehicule_id", nullable = true)
+    @ToString.Exclude
     private Vehicules vehicule;
+
+
+    
 }
