@@ -40,7 +40,8 @@ public class ServiceImage {
         }
 
         // Générer un nom unique
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        String sanitizeFileName =sanitizeFileName(file.getOriginalFilename());
+        String fileName = System.currentTimeMillis() + "_" + sanitizeFileName;
         Path filePath = Paths.get(UPLOAD_DIR, fileName);
 
         // Sauvegarde physique
@@ -66,7 +67,9 @@ public class ServiceImage {
             uploadDir.mkdirs();
         }
 
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        String sanitizeFileName = sanitizeFileName(file.getOriginalFilename());
+
+        String fileName = System.currentTimeMillis() + "_" + sanitizeFileName;
         Path filePath = Paths.get(UPLOAD_DIR, fileName);
 
         // Sauvegarde physique
@@ -88,6 +91,9 @@ public class ServiceImage {
                 .orElseThrow(() -> new IllegalArgumentException("Image introuvable avec l'id " + id));
     }
 
+
+
+
     // Récupération du fichier physique
     public Resource loadFileAsResource(String fileName) throws IOException {
         Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName).normalize();
@@ -98,5 +104,16 @@ public class ServiceImage {
         }
 
         return resource;
+    }
+
+    /**
+     * Methode pour netoyer le nom de fichier
+     */
+
+    public String sanitizeFileName(String original){
+
+        return original
+                .replaceAll("[\\s]","_")    // remplace les espaces par _
+                .replaceAll("[^a-zA-Z0-9_.-]",""); // supprime tous les caractères spéciaux sauf _ . -
     }
 }

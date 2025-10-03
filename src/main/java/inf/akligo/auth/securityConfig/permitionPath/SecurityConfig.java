@@ -49,12 +49,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .cors(withDefaults())
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/auth/**").permitAll() // Autoriser toutes les requêtes sous /auth
             .requestMatchers("/public/**").permitAll() // Autoriser aussi toutes les requêtes sous /public
             .requestMatchers("/auth/users/me").hasRole("USER") // Protection pour cette route spécifique
             .requestMatchers("/api/appartement/").hasAnyRole("PROPRIETAIRE", "ADMIN")
             .requestMatchers("/api/immeubles").hasAnyRole("PROPRIETAIRE", "ADMIN")
             .requestMatchers("/api/image/").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/auth/**").permitAll() // Autoriser toutes les requêtes sous /auth
             .requestMatchers("/api/image/file/**").permitAll()
             .requestMatchers("/api/appartement/list").permitAll()
             .anyRequest().authenticated() // Toute autre requête nécessite une authentification

@@ -82,6 +82,7 @@ public class ImagesController{
     @GetMapping("file/{filename}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename){
         try {
+            
             Resource resource = serviceImage.loadFileAsResource(filename);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
