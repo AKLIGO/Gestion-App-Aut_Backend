@@ -65,4 +65,18 @@ public class EmailService{
         helper.setText(template, true);
         mailSender.send(mimeMessage);
     }
+
+        @Async
+    public void sendActivationEmail(String to, String activationCode, String username) throws MessagingException {
+        String activationLink = "http://localhost:4200/activate-account?token=" + activationCode;
+
+        sendEmail(
+                to,
+                username,
+                null,                  // template par défaut
+                activationCode,
+                activationLink,
+                "Activation de votre compte"
+        );
+    }
 }

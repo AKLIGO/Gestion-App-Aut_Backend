@@ -69,7 +69,7 @@ public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
                 .orElseThrow(() -> new RuntimeException("Role USER non trouvé"));
 
         utilisateur.setRoles(Collections.singletonList(roleUser));
-        utilisateur.setEnabled(true);
+        utilisateur.setEnabled(false);
         utilisateur.setAccountLocked(false);
         utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
 
@@ -173,6 +173,8 @@ public class ServiceCompteImpl implements ServiceCompte, UserDetailsService {
                 .build();
 
         tokenRepository.save(token);
+
+        
         return generatedToken;
     }
 
