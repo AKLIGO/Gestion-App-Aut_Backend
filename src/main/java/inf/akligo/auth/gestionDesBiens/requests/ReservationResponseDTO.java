@@ -16,7 +16,8 @@ public class ReservationResponseDTO {
 
     private Long id;                  // ID de la réservation
     private LocalDate dateDebut;      // Date de début de la réservation
-    private LocalDate dateFin;        // Date de fin de la réservation
+    private LocalDate dateFin;// Date de fin de la réservation
+    private Double montant;        
     private String appartementNom;    // Nom de l'appartement
     private String appartementAdresse;// Adresse de l'appartement
     private String utilisateurNom;    // Nom de l'utilisateur

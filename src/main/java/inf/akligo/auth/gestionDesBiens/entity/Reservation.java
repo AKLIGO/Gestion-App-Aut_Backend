@@ -53,6 +53,7 @@ public class Reservation{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Double montant;
     @Column(name = "date_debut", nullable = false)
     private LocalDate dateDebut;
 

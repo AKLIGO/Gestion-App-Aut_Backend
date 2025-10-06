@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import inf.akligo.auth.authConfiguration.repository.UtilisateurRepository;
+import java.time.temporal.ChronoUnit;
 
 import inf.akligo.auth.gestionDesBiens.repository.ReservationRepository;
 import inf.akligo.auth.gestionDesBiens.repository.AppartementRepository;
@@ -51,10 +52,19 @@ public class ServiceReservation{
         // Récupérer l'utilisateur connecté
         Utilisateurs utilisateur = utilisateurRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        
+       
+
+
 
         // Vérifier si l’appartement existe
         Appartement appartement = appartementRepository.findById(request.getAppartementId())
                 .orElseThrow(() -> new RuntimeException("Appartement introuvable"));
+
+        long jours = ChronoUnit.DAYS.between(request.getDateDebut(), request.getDateFin());
+        if(jours<=0) throw new RuntimeException("Date invalide");
+
+        double montant=jours * appartement.getPrix();
 
         // Vérifier si déjà réservé
         boolean dejaReserve = reservationRepository
@@ -76,6 +86,7 @@ public class ServiceReservation{
                 .type(TypeDeRervation.APPARTEMENT)
                 .statut(StatutDeReservation.EN_ATTENTE) 
                 .appartement(appartement)
+                .montant(montant)
                 .utilisateur(utilisateur)
                 .build();
 
@@ -110,6 +121,7 @@ public ReservationResponseDTO updateReservationStatus(Long reservationId, String
             .id(reservation.getId())
             .dateDebut(reservation.getDateDebut())
             .dateFin(reservation.getDateFin())
+            .montant(reservation.getMontant())
             .appartementNom(reservation.getAppartement().getNom())
             .appartementAdresse(reservation.getAppartement().getAdresse())
             .utilisateurNom(utilisateur.getNom())
@@ -209,6 +221,7 @@ public ReservationResponseVehi updateReservationStatutVehi(Long reservartionId, 
                         reservation.getId(),
                         reservation.getDateDebut(),
                         reservation.getDateFin(),
+                        reservation.getMontant(),
                         reservation.getAppartement() != null ? reservation.getAppartement().getNom() : null,
                         reservation.getAppartement() != null ? reservation.getAppartement().getAdresse() : null,
                         reservation.getUtilisateur() != null ? reservation.getUtilisateur().getNom() : null,
@@ -232,6 +245,7 @@ public ReservationResponseVehi updateReservationStatutVehi(Long reservartionId, 
                     r.getId(),
                     r.getDateDebut(),
                     r.getDateFin(),
+                    r.getMontant(),
                     r.getAppartement() != null ? r.getAppartement().getNom() : null,
                     r.getAppartement() != null ? r.getAppartement().getAdresse() : null,
                     r.getUtilisateur() != null ? r.getUtilisateur().getNom() : null,
