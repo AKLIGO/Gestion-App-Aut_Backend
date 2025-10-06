@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 import java.util.List;
 import org.springframework.security.core.Authentication;
@@ -201,7 +202,55 @@ public ReservationResponseVehi updateReservationStatutVehi(Long reservartionId, 
 
 
 
+        public List<ReservationResponseDTO> getReservationsByAppartement(Long appartementId) {
+        return reservationRepository.findByAppartementId(appartementId)
+                .stream()
+                .map(reservation -> new ReservationResponseDTO(
+                        reservation.getId(),
+                        reservation.getDateDebut(),
+                        reservation.getDateFin(),
+                        reservation.getAppartement() != null ? reservation.getAppartement().getNom() : null,
+                        reservation.getAppartement() != null ? reservation.getAppartement().getAdresse() : null,
+                        reservation.getUtilisateur() != null ? reservation.getUtilisateur().getNom() : null,
+                        reservation.getUtilisateur() != null ? reservation.getUtilisateur().getPrenoms() : null,
+                        reservation.getStatut() != null ? reservation.getStatut().name() : null
+                ))
+                .collect(Collectors.toList());
+    }
 
+
+
+        /**
+         * Methode pour recuperer toutes les reservations
+         */
+
+       public List<ReservationResponseDTO> getAllReservations() {
+    List<Reservation> reservations = reservationRepository.findAll();
+
+    return reservations.stream()
+            .map(r -> new ReservationResponseDTO(
+                    r.getId(),
+                    r.getDateDebut(),
+                    r.getDateFin(),
+                    r.getAppartement() != null ? r.getAppartement().getNom() : null,
+                    r.getAppartement() != null ? r.getAppartement().getAdresse() : null,
+                    r.getUtilisateur() != null ? r.getUtilisateur().getNom() : null,
+                    r.getUtilisateur() != null ? r.getUtilisateur().getPrenoms() : null,
+                    r.getStatut() != null ? r.getStatut().name() : null
+            ))
+            .collect(Collectors.toList());
+        }
+
+
+        @Transactional
+        public void deleteReservation(Long reservationId) {
+    // Vérifier si la réservation existe
+                Reservation reservation = reservationRepository.findById(reservationId)
+                        .orElseThrow(() -> new RuntimeException("Réservation non trouvée avec l'id : " + reservationId));
+
+    // Supprimer la réservation
+                reservationRepository.delete(reservation);
+}
 
 
 }

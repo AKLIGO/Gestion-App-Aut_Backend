@@ -48,4 +48,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>{
 
     // Rechercher par appartement et statut
     List<Reservation> findByAppartementAndStatut(Appartement appartement, StatutDeReservation statut);
+
+    List<Reservation> findByAppartementId(Long appartementId);
 }

@@ -12,7 +12,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 
 
-
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
@@ -37,4 +37,26 @@ public class ReservationController {
 
         return ResponseEntity.ok(updatedReservation);
     }
+
+    @GetMapping("/appartement/{appartementId}")
+    public ResponseEntity<List<ReservationResponseDTO>> getReservationsByAppartement(
+            @PathVariable Long appartementId) {
+
+        List<ReservationResponseDTO> reservations = reservationService.getReservationsByAppartement(appartementId);
+        return ResponseEntity.ok(reservations);
+    }
+
+        // Endpoint pour récupérer la liste des réservations
+    @GetMapping
+    public List<ReservationResponseDTO> getReservations() {
+        return reservationService.getAllReservations();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteReservation(@PathVariable("id") Long reservationId) {
+        reservationService.deleteReservation(reservationId);
+        return ResponseEntity.ok("Réservation supprimée avec succès !");
+}
+
+
 }
