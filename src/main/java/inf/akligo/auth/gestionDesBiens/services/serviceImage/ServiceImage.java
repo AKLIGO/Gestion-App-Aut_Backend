@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -116,4 +117,39 @@ public class ServiceImage {
                 .replaceAll("[\\s]","_")    // remplace les espaces par _
                 .replaceAll("[^a-zA-Z0-9_.-]",""); // supprime tous les caractères spéciaux sauf _ . -
     }
+
+
+    public Images uploadImageLibre(String libelle, MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Le fichier est vide");
+        }
+
+        File uploadDir = new File(UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        String sanitizeFileName = sanitizeFileName(file.getOriginalFilename());
+        String fileName = System.currentTimeMillis() + "_" + sanitizeFileName;
+        Path filePath = Paths.get(UPLOAD_DIR, fileName);
+
+        Files.copy(file.getInputStream(), filePath);
+
+        Images image = Images.builder()
+                .libelle(libelle)
+                .nomFichier(fileName)
+                .typeMime(file.getContentType())
+                .build();
+
+        return imagesRepository.save(image);
+    }
+
+
+    /**
+     * Récupérer toutes les images libres
+     */
+    public List<Images> getAllImagesLibres() {
+        return imagesRepository.findByAppartementIsNullAndVehiculeIsNull();
+    }
+
 }

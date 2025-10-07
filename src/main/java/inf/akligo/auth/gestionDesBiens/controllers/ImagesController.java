@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-
+import org.springframework.http.HttpStatus;
 
 
 import java.io.IOException;
@@ -91,6 +91,38 @@ public class ImagesController{
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+
+    /**
+     * Endpoint pour uploader une image libre
+     * POST /api/images/upload
+     */
+    @PostMapping("/upload")
+    public ResponseEntity<Images> uploadImageLibre(
+            @RequestParam("libelle") String libelle,
+            @RequestParam("file") MultipartFile file) {
+
+        try {
+            Images savedImage = serviceImage.uploadImageLibre(libelle, file);
+            return new ResponseEntity<>(savedImage, HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Endpoint pour récupérer toutes les images libres
+     * GET /api/images/libres
+     */
+    @GetMapping("/libres")
+    public ResponseEntity<List<Images>> getAllImagesLibres() {
+        List<Images> imagesLibres = serviceImage.getAllImagesLibres();
+        if (imagesLibres.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(imagesLibres, HttpStatus.OK);
     }
 
 }
