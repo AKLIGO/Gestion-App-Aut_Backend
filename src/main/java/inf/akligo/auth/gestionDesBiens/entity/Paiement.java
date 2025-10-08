@@ -1,7 +1,7 @@
 package inf.akligo.auth.gestionDesBiens.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,5 +49,6 @@ public class Paiement{
     private StatutPaiement statut; // EFFECTUE, EN_ATTENTE, ANNULE
 
     @ManyToOne
+    @JsonBackReference
     private Reservation reservation;
 }

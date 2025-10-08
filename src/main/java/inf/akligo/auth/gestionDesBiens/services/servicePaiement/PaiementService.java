@@ -1,4 +1,4 @@
-package inf.akligo.auth.gestionDesBiens.services.serviceReservation;
+package inf.akligo.auth.gestionDesBiens.services.servicePaiement;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -34,6 +34,9 @@ public class PaiementService{
                 .build();
         paiementRepository.save(paiement);
 
+        /**
+         * met a jour le statut de la reservation
+         */
         double totalPaye = reservation.getMontantPaye();
 
         if(totalPaye >= reservation.getMontantPaye()){
@@ -48,6 +51,10 @@ public class PaiementService{
         return paiement;
     
 
+    }
+
+    public List<Paiement> getAllPaiements(){
+        return paiementRepository.findAll();
     }
 
 }

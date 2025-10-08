@@ -2,13 +2,14 @@ package inf.akligo.auth.gestionDesBiens.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
 import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutDeReservation;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeDeRervation;
 import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
 import inf.akligo.auth.gestionDesBiens.entity.Paiement;
+//import inf.akligo.auth.gestionDesBiens.entity.Reservation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,7 @@ import lombok.ToString;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -89,17 +91,22 @@ public class Reservation{
     @Enumerated(EnumType.STRING)
     private TypeDeRervation type;
 
-
+    //@JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<Paiement> paiements = new ArrayList<>();
 
 
+    // Retourne 0 si paiements est null
     public double getMontantPaye() {
-        return paiements.stream().mapToDouble(Paiement::getMontant).sum();
+        return paiements == null ? 0 : paiements.stream().mapToDouble(Paiement::getMontant).sum();
     }
 
     public boolean isTotalementPaye() {
         return getMontantPaye() >= montant;
     }
+
+  
+
 
 }

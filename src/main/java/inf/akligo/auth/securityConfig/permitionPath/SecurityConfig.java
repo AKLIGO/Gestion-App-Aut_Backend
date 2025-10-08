@@ -58,6 +58,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/api/image/file/**").permitAll()
             .requestMatchers("/api/appartement/list").permitAll()
             .requestMatchers("/api/image/libres").permitAll()
+            .requestMatchers("/api/paiement/**").authenticated()
             .anyRequest().authenticated() // Toute autre requête nécessite une authentification
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
