@@ -8,7 +8,7 @@ import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutDeReservation;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeDeRervation;
 import inf.akligo.auth.authConfiguration.entity.Utilisateurs;
-
+import inf.akligo.auth.gestionDesBiens.entity.Paiement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -90,8 +90,16 @@ public class Reservation{
     private TypeDeRervation type;
 
 
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<Paiement> paiements = new ArrayList<>();
 
 
+    public double getMontantPaye() {
+        return paiements.stream().mapToDouble(Paiement::getMontant).sum();
+    }
 
+    public boolean isTotalementPaye() {
+        return getMontantPaye() >= montant;
+    }
 
 }

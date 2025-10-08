@@ -57,6 +57,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/auth/**").permitAll() // Autoriser toutes les requêtes sous /auth
             .requestMatchers("/api/image/file/**").permitAll()
             .requestMatchers("/api/appartement/list").permitAll()
+            .requestMatchers("/api/image/libres").permitAll()
             .anyRequest().authenticated() // Toute autre requête nécessite une authentification
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
