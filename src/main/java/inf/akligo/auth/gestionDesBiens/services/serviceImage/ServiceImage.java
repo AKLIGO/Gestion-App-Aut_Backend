@@ -7,10 +7,12 @@ import org.springframework.core.io.UrlResource;
 
 import inf.akligo.auth.gestionDesBiens.entity.Images;
 import inf.akligo.auth.gestionDesBiens.entity.Appartement;
+import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import inf.akligo.auth.gestionDesBiens.repository.ImageRepository;
+import inf.akligo.auth.gestionDesBiens.repository.VehiculeRepository;
 import inf.akligo.auth.gestionDesBiens.repository.AppartementRepository;
 import lombok.RequiredArgsConstructor;
-
+import java.util.Optional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,6 +26,8 @@ public class ServiceImage {
 
     private final ImageRepository imagesRepository;
     private final AppartementRepository appartementsRepository;
+    private final VehiculeRepository vehiculeRepository;
+
     private static final String UPLOAD_DIR = "uploads/images/";
 
     public Images uploadImageWithAppartement(String libelle, MultipartFile file, Long appartementId) throws IOException {
@@ -87,9 +91,48 @@ public class ServiceImage {
         return imagesRepository.save(image);
     }
 
+
+    public Images uploadImageWithVehiculeByImmatriculation(String libelle, MultipartFile file, String immatriculationVehicule) throws IOException {
+
+       Optional<Vehicules> optionalVehicule = vehiculeRepository.findByImmatriculation(immatriculationVehicule);
+      if (optionalVehicule.isEmpty()) {
+                throw new IllegalArgumentException("Vehicule introuvable avec immatriculation : " + immatriculationVehicule);
+                
+            }
+        Vehicules vehicule = optionalVehicule.get();
+        System.out.println("Vehicule trouvé : " + vehicule.getMarque());
+        
+        File uploadDir = new File(UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        String sanitizeFileName = sanitizeFileName(file.getOriginalFilename());
+
+        String fileName = System.currentTimeMillis() + "_" + sanitizeFileName;
+        Path filePath = Paths.get(UPLOAD_DIR, fileName);
+
+        // Sauvegarde physique
+        Files.copy(file.getInputStream(), filePath);
+
+        // Sauvegarde en base
+        Images image = Images.builder()
+                .libelle(libelle)
+                .nomFichier(fileName) 
+                .typeMime(file.getContentType())
+                .vehicule(vehicule)
+                .build();
+
+        return imagesRepository.save(image);
+
+
+    }
+
     public Images getImageById(Long id) {
         return imagesRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Image introuvable avec l'id " + id));
+
+                
     }
 
 

@@ -14,4 +14,7 @@ public interface VehiculeRepository extends JpaRepository<Vehicules, Long>{
     Optional<Vehicules> findByIdAndStatut(Long id, StatutVehicule statut);
     Optional<Vehicules> findByMarque(String marque);
 
+     // Ajoute cette ligne pour Spring Data JPA
+    Optional<Vehicules> findByImmatriculation(String immatriculation);
+
 }

@@ -54,6 +54,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/api/appartement/").hasAnyRole("PROPRIETAIRE", "ADMIN")
             .requestMatchers("/api/immeubles").hasAnyRole("PROPRIETAIRE", "ADMIN")
             .requestMatchers("/api/image/").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/image/ajoutImageTovehicule").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/paiement/supprimer/{id}").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/vehicules/ajouter").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/vehicules/supprimer/{id}").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/vehicules/modifier/{id}").hasAnyRole("PROPRIETAIRE", "ADMIN")
+            .requestMatchers("/api/vehicules/list").permitAll()
             .requestMatchers("/auth/**").permitAll() // Autoriser toutes les requêtes sous /auth
             .requestMatchers("/api/image/file/**").permitAll()
             .requestMatchers("/api/appartement/list").permitAll()

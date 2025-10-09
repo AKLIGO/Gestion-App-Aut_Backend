@@ -17,14 +17,14 @@ public class VehiculeController {
     private final ServiceVehicule serviceVehicule;
 
     // Ajouter un véhicule
-    @PostMapping
+    @PostMapping("/ajouter")
     public ResponseEntity<Vehicules> addVehicule(@RequestBody Vehicules vehicule) {
         Vehicules saved = serviceVehicule.addVehicules(vehicule);
         return ResponseEntity.ok(saved);
     }
 
     // Mettre à jour un véhicule
-    @PutMapping("/{id}")
+    @PutMapping("/modifier/{id}")
     public ResponseEntity<Vehicules> updateVehicule(@PathVariable Long id, @RequestBody Vehicules vehicule) {
         Vehicules updated = serviceVehicule.updateVehicules(vehicule, id);
         if (updated == null) {
@@ -34,7 +34,7 @@ public class VehiculeController {
     }
 
     // Supprimer un véhicule
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/supprimer/{id}")
     public ResponseEntity<Void> removeVehicule(@PathVariable Long id) {
         serviceVehicule.removeVehicules(id);
         return ResponseEntity.noContent().build();
@@ -51,7 +51,7 @@ public class VehiculeController {
     }
 
     // Lister tous les véhicules
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<Vehicules>> listVehicules() {
         return ResponseEntity.ok(serviceVehicule.listVehicules());
     }

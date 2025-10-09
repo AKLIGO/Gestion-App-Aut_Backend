@@ -26,12 +26,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.EntityListeners;
 import inf.akligo.auth.gestionDesBiens.entity.Reservation;
+import lombok.ToString;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+//@ToString(exclude = "reservation")
 public class Paiement{
 
      @Id
@@ -50,5 +52,6 @@ public class Paiement{
 
     @ManyToOne
     @JsonBackReference
+    @ToString.Exclude 
     private Reservation reservation;
 }

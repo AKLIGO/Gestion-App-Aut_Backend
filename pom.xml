@@ -55,12 +55,12 @@
     		<artifactId>jackson-databind</artifactId>
 		</dependency>
 
-		<dependency>
+		<!-- <dependency>
     		<groupId>org.projectlombok</groupId>
    			<artifactId>lombok</artifactId>
     		<version>1.18.38</version>
     		<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
     		<groupId>io.jsonwebtoken</groupId>
@@ -105,11 +105,11 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
     		<groupId>org.projectlombok</groupId>
@@ -193,6 +193,7 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.38</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

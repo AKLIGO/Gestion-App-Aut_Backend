@@ -4,6 +4,7 @@ import inf.akligo.auth.gestionDesBiens.requests.ImageDTO;
 import inf.akligo.auth.gestionDesBiens.entity.Images;
 import inf.akligo.auth.gestionDesBiens.services.serviceImage.ServiceImage;
 import org.springframework.http.ResponseEntity;
+import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,22 @@ public class ImagesController{
             Images image =serviceImage.uploadImageWithAppartementByName(libelle, file, appartementNom);
             return ResponseEntity.ok(image);
         }catch (IOException e) {
+            return ResponseEntity.badRequest().body("Erreur lors de l'upload: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());
+        }
+    }
+    @PostMapping("/ajoutImageTovehicule")
+    public ResponseEntity<?> uploadImageWithVehiculeByImmatriculation(
+            @RequestParam("libelle") String libelle,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("immatriculationVehicule") String immatriculationVehicule
+    )
+    {
+        try{
+            Images image = serviceImage.uploadImageWithVehiculeByImmatriculation(libelle, file, immatriculationVehicule);
+            return ResponseEntity.ok(image);
+        } catch (IOException e) {
             return ResponseEntity.badRequest().body("Erreur lors de l'upload: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());

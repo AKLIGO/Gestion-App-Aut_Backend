@@ -39,7 +39,7 @@ import java.util.List;
 import java.time.LocalDate;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
-
+import lombok.ToString;
 
 @Builder
 @Entity
@@ -49,6 +49,7 @@ import jakarta.persistence.EnumType;
 @Setter
 @ToString
 @EntityListeners(AuditingEntityListener.class)
+//@ToString(exclude = "paiements")
 public class Reservation{
 
     @Id
@@ -93,6 +94,7 @@ public class Reservation{
 
     //@JsonIgnore
     @JsonManagedReference
+    @ToString.Exclude 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<Paiement> paiements = new ArrayList<>();
 
