@@ -65,6 +65,7 @@ public class Images{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicule_id", nullable = true)
     @ToString.Exclude
+    //@JsonBackReference("vehicule-images")
     private Vehicules vehicule;
 
 

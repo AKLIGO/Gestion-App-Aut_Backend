@@ -1,5 +1,5 @@
 package inf.akligo.auth.gestionDesBiens.services.serviceVehicules;
-
+import inf.akligo.auth.gestionDesBiens.requests.VehiculeDTO;
 import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 //import inf.akligo.auth.gestionDesBiens.entity.Immeuble;
 
@@ -17,6 +17,6 @@ public interface ServiceVehicule{
 
     public boolean isDiponible(Long VehiculesId);
     public Vehicules getVehiculesById(Long id);
-
+    List<VehiculeDTO> getAllVehiculesDTO();
 
 }

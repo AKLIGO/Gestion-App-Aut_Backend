@@ -4,6 +4,7 @@ import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import inf.akligo.auth.gestionDesBiens.services.serviceVehicules.ServiceVehicule;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import inf.akligo.auth.gestionDesBiens.requests.VehiculeDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -71,5 +72,12 @@ public class VehiculeController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+        // Lister tous les véhicules (DTO)
+    @GetMapping("/lists")
+    public ResponseEntity<List<VehiculeDTO>> listVehiculesDTO() {
+        List<VehiculeDTO> vehiculesDTO = serviceVehicule.getAllVehiculesDTO();
+        return ResponseEntity.ok(vehiculesDTO);
     }
 }

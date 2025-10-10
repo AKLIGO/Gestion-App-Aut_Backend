@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import inf.akligo.auth.gestionDesBiens.requests.ImageDTOVeh;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class VehiculeDTO {
     private TypeVehicule type;
 
     // Liste des images associées au véhicule
-    private List<Images> images;
+    private List<ImageDTOVeh> images;
 
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedDate;

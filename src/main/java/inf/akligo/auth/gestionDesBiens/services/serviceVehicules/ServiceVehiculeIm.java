@@ -2,10 +2,18 @@ package inf.akligo.auth.gestionDesBiens.services.serviceVehicules;
 
 import inf.akligo.auth.gestionDesBiens.entity.Vehicules;
 import inf.akligo.auth.gestionDesBiens.repository.VehiculeRepository;
+import inf.akligo.auth.gestionDesBiens.requests.VehiculeDTO;
+import inf.akligo.auth.gestionDesBiens.requests.ImageDTOVeh;
 import org.springframework.stereotype.Service;
 import inf.akligo.auth.gestionDesBiens.services.serviceVehicules.ServiceVehicule;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.StatutVehicule;
 import inf.akligo.auth.gestionDesBiens.enumerateurs.TypeVehicule;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -90,6 +98,66 @@ public class ServiceVehiculeIm implements ServiceVehicule{
                 .orElseThrow(() -> new RuntimeException("Vehicule non trouvé avec id: " + id));
 
     }
+
+     @Override
+     @Transactional(readOnly = true)
+     public List<VehiculeDTO> getAllVehiculesDTO() {
+        List<Vehicules> vehicules = vehiculeRepository.findAll();
+        System.out.println("Nombre de véhicules récupérés : " + vehicules.size());
+    
+        if (vehicules == null) {
+            vehicules = new ArrayList<>();
+        }
+
+        return vehicules.stream()
+                .map(vehicule -> {
+                    try {
+                        return convertToDTO(vehicule);
+                    } catch (Exception e) {
+                        e.printStackTrace(); // log l’erreur pour chaque véhicule
+                        return null; // ignore le véhicule qui pose problème
+                    }
+                })
+                .filter(Objects::nonNull) // retire les DTO nuls
+                .collect(Collectors.toList());
+        }
+
+
+    //convertisseur
+
+
+    public VehiculeDTO convertToDTO(Vehicules vehicule) {
+    List<ImageDTOVeh> imageDtos = new ArrayList<>();
+
+    if (vehicule.getImages() != null && !vehicule.getImages().isEmpty()) {
+        imageDtos = vehicule.getImages().stream()
+                .map(image -> ImageDTOVeh.builder()
+                        .id(image.getId())
+                        .libelle(image.getLibelle())
+                        .nomFichier(image.getNomFichier())
+                        .typeMime(image.getTypeMime())
+                        .vehiculeId(vehicule.getId())
+                        .previewUrl("http://localhost:8080/api/image/file/" + image.getNomFichier())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    return VehiculeDTO.builder()
+            .id(vehicule.getId())
+            .marque(vehicule.getMarque())
+            .modele(vehicule.getModele())
+            .immatriculation(vehicule.getImmatriculation())
+            .prix(vehicule.getPrix())
+            .carburant(vehicule.getCarburant())
+            .statut(vehicule.getStatut())
+            .type(vehicule.getType())
+            .images(imageDtos)
+            .createdAt(vehicule.getCreatedAt())
+            .lastModifiedDate(vehicule.getLastModifiedDate())
+            .build();
+}
+
+   
 
 
 }

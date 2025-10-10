@@ -64,11 +64,12 @@ public class Vehicules{
     private TypeVehicule type; 
 
 
-    @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     @JsonManagedReference("vehicule-images")
     @ToString.Exclude
     //@JsonManagedReference
     @JsonIgnore
+    
     private List<Images> images = new ArrayList<>();
 
     @CreatedDate
